@@ -15,7 +15,7 @@ from nequip.utils.tp_utils import tp_path_exists
 from ._fc import ScalarMLPFunction
 from .. import _keys
 from ._strided import Contracter, MakeWeightedChannels, Linear
-from .cutoffs import cosine_cutoff, polynomial_cutoff
+from .cutoffs import cosine_cutoff, polynomial_cutoff, exponential_cutoff
 
 
 @compile_mode("script")
@@ -45,6 +45,7 @@ class Allegro_Module(GraphModuleMixin, torch.nn.Module):
         # cutoffs
         r_start_cos_ratio: float = 0.8,
         PolynomialCutoff_p: float = 6,
+        r_min: float = 0.0,
         per_layer_cutoffs: Optional[List[float]] = None,
         cutoff_type: str = "polynomial",
         # general hyperparameters:
@@ -478,6 +479,10 @@ class Allegro_Module(GraphModuleMixin, torch.nn.Module):
         elif self.cutoff_type == "polynomial":
             cutoff_coeffs_all = polynomial_cutoff(
                 edge_length, self.per_layer_cutoffs, p=self.polynomial_cutoff_p
+            )
+        elif self.cutoff_type == "exponential":
+            cutoff_coeffs_all = exponential_cutoff(
+                edge_length, self.per_layer_cutoffs, r_min=self.r_min
             )
         else:
             # This branch is unreachable (cutoff type is checked in __init__)

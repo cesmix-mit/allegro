@@ -15,14 +15,14 @@ def cosine_cutoff(x: torch.Tensor, r_max: torch.Tensor, r_start_cos_ratio: float
     return 0.5 * (torch.cos((math.pi / (r_max - r_decay)) * (x - r_decay)) + 1.0)
 
 @torch.jit.script
-def exponential_cutoff(x: torch.Tensor, r_max: torch.Tensor, rin: float = 0.0):
+def exponential_cutoff(x: torch.Tensor, r_max: torch.Tensor, r_min: float = 0.0):
     """Exponential cutoff as proposed in POD.
 
     Broadcasts over r_max.
     """
     r_max, x = torch.broadcast_tensors(r_max.unsqueeze(-1), x.unsqueeze(0))
-    r = x - rin               
-    y = r/(r_max - rin)    
+    r = x - r_min               
+    y = r/(r_max - r_min)    
     return torch.exp(-1.0/sqrt((1.0 - y^3)^2 + 1e-6))*(1.0/exp(-1.0))    
 
 @torch.jit.script
