@@ -20,7 +20,7 @@ class NormalizedBasis(torch.nn.Module):
         self,
         r_max: float,
         r_min: float = 0.0,
-        original_basis=BesselBasis,
+        original_basis=POD_Basis,
         original_basis_kwargs: dict = {},
         n: int = 4000,
         norm_basis_mean_shift: bool = True,
