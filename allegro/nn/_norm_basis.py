@@ -1,7 +1,7 @@
 import torch
 
 from nequip.nn.radial_basis import BesselBasis
-
+from pod_basis import POD_Basis
 
 class NormalizedBasis(torch.nn.Module):
     """Normalized version of a given radial basis.
